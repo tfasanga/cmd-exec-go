@@ -1,4 +1,4 @@
-module github.com/tfasanga/cmd-exec
+module github.com/tfasanga/cmd-exec-go
 
 go 1.21.1
 

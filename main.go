@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/tfasanga/cmd-exec/exec"
+	"github.com/tfasanga/cmd-exec-go/exec"
 	"os"
 )
 
