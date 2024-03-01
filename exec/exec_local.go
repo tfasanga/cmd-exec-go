@@ -2,6 +2,7 @@ package exec
 
 import (
 	"fmt"
+	"golang.org/x/crypto/ssh"
 	"os"
 	"os/exec"
 )
@@ -57,6 +58,15 @@ func NewLocalMachine(user string) Machine {
 		localUser: user,
 	}
 	return localMachine
+}
+
+func NewSshMachine(hostname string, port int, sshConfig *ssh.ClientConfig) Machine {
+	sshMachine := &sshExecutionContext{
+		host:      hostname,
+		port:      port,
+		sshConfig: sshConfig,
+	}
+	return sshMachine
 }
 
 func localExec(io CommandInOut, dir, command string, arg ...string) (string, error) {
