@@ -4,15 +4,6 @@ import (
 	"fmt"
 )
 
-type Machines struct {
-	LocalMachine            Machine
-	BuildMachine            Machine
-	VagrantMachine          Machine
-	DeployerMachine         Machine
-	CloudMachine            Machine
-	AdditionalCloudMachines []Machine
-}
-
 type CommandExecutor interface {
 	ExecuteCmd(io CommandInOut, dir, command string, arg ...string) (string, error)
 	RunCmd(io CommandInOut, dir, command string, arg ...string) error
@@ -73,4 +64,16 @@ func Rsync(io CommandInOut, sourceMachine Machine, sourceRootDir, sourceRelative
 	}
 	cmd, args := buildRsyncCmdAndArgs(sourceRootDir, sourceRelativeDir, destinationMachine, destinationRootDir, excluded)
 	return sourceMachine.RunCmd(io, "", cmd, args...)
+}
+
+func Mkdirs(machine Machine, io CommandInOut, dirName string) error {
+	return machine.RunCmd(io, "", "mkdir", "-p", dirName)
+}
+
+func FileExists(machine Machine, io CommandInOut, fileName string) (bool, error) {
+	return fileTest(machine, io, fileName, "-f")
+}
+
+func DirectoryExists(machine Machine, io CommandInOut, fileName string) (bool, error) {
+	return fileTest(machine, io, fileName, "-d")
 }
