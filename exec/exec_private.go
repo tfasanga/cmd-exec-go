@@ -7,20 +7,13 @@ import (
 	"strings"
 )
 
-func buildRsyncCmdAndArgs(sourceRootDir string, sourceRelativeDir string, to Machine, destinationRootDir string, excluded []string) (string, []string) {
+func buildRsyncCmdAndArgs(sourceRootDir string, sourceRelativeDir string, to Machine, destinationRootDir string, options []string) (string, []string) {
 	cmd := "rsync"
-	args := buildRsyncArgs(sourceRootDir, sourceRelativeDir, to, destinationRootDir, excluded)
+	args := buildRsyncArgs(sourceRootDir, sourceRelativeDir, to, destinationRootDir, options)
 	return cmd, args
 }
 
-func buildRsyncArgs(sourceRootDir string, sourceRelativeDir string, to Machine, destinationRootDir string, excluded []string) []string {
-	var options []string
-	options = append(options, "--archive", "--relative", "--delete", "--verbose", "-o")
-	if excluded != nil {
-		for _, e := range excluded {
-			options = append(options, fmt.Sprintf("--exclude=%s", e))
-		}
-	}
+func buildRsyncArgs(sourceRootDir string, sourceRelativeDir string, to Machine, destinationRootDir string, options []string) []string {
 	// must append "/./" in order to copy relative paths, see man for "rsync -R"
 	source := fmt.Sprintf("%s/./%s", sourceRootDir, sourceRelativeDir)
 	destination := fmt.Sprintf("%s@%s:%s", to.User(), to.IpAddr(), destinationRootDir)

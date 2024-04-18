@@ -51,7 +51,7 @@ func Scp(io CommandInOut, sourceMachine Machine, sourceFile string, destinationM
 	return execMachine.RunCmd(io, "", cmd, args...)
 }
 
-func Rsync(io CommandInOut, sourceMachine Machine, sourceRootDir, sourceRelativeDir string, destinationMachine Machine, destinationRootDir string, excluded []string) error {
+func Rsync(io CommandInOut, sourceMachine Machine, sourceRootDir, sourceRelativeDir string, destinationMachine Machine, destinationRootDir string, options []string) error {
 	if destinationMachine.Host() == sourceMachine.Host() {
 		_, err := fmt.Fprintf(io.Out(), "Skipping, source and destination are the same: %s\n", destinationMachine.Host())
 		if err != nil {
@@ -62,7 +62,7 @@ func Rsync(io CommandInOut, sourceMachine Machine, sourceRootDir, sourceRelative
 	if IsLocal(destinationMachine) {
 		return fmt.Errorf("remote machine cannot be %s", destinationMachine.Host())
 	}
-	cmd, args := buildRsyncCmdAndArgs(sourceRootDir, sourceRelativeDir, destinationMachine, destinationRootDir, excluded)
+	cmd, args := buildRsyncCmdAndArgs(sourceRootDir, sourceRelativeDir, destinationMachine, destinationRootDir, options)
 	return sourceMachine.RunCmd(io, "", cmd, args...)
 }
 
